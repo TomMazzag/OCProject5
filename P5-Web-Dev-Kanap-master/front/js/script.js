@@ -1,6 +1,7 @@
 const items = document.getElementById('items');
 
 function newProduct(products, product) {
+    let link = document.createElement('a');
     let newArticle = document.createElement('article');
     let title = document.createElement('h3');
     let description = document.createElement('p');
@@ -12,21 +13,21 @@ function newProduct(products, product) {
     description.classList.add('productDescription');
     image.src = products[product].imageUrl;
     image.alt = products[product].altTxt;
+    link.href = '/P5-Web-Dev-Kanap-master/front/html/product.html?id=' + products[product]._id;
 
     newArticle.appendChild(title);
     newArticle.appendChild(description);
     newArticle.appendChild(image);
-    return newArticle;
+    link.appendChild(newArticle)
+    return link;
 }
 
-async function getText(file) {
-    let myObject = await fetch(file);
+async function addProducts(link) {
+    let myObject = await fetch(link);
     let products = await myObject.json();
     for (product in products) {
         items.appendChild(newProduct(products, product))
     }
-
-    
 }
 
-getText('http://localhost:3000/api/products')
+addProducts('http://localhost:3000/api/products')
