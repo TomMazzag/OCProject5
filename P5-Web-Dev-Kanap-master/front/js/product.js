@@ -10,6 +10,8 @@ const dropDown = document.getElementById('colors');
 
 const cart = document.getElementById('addToCart');
 
+let productKey = '';
+
 function addDetails(product) {
     let image = document.createElement('img');
     image.src = product.imageUrl;
@@ -31,6 +33,7 @@ async function addProduct(link) {
     let myObject = await fetch(link);
     let product = await myObject.json();
     document.title = product.name;
+    productKey = product.name;
     addDetails(product)
 }
 
@@ -50,7 +53,7 @@ document.getElementById('colors').addEventListener('change', $event => {
 cart.addEventListener('click', () => {
     if (selectedQuantity > 0 && dropDown != '--Please, select a color --') {
         added = [selectedColour, selectedQuantity, id]
-        localStorage.setItem('Product', added)
+        localStorage.setItem(productKey, added)
     }
     
 })
