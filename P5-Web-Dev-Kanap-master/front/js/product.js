@@ -53,7 +53,7 @@ document.getElementById('colors').addEventListener('change', $event => {
 cart.addEventListener('click', () => {
     if (selectedQuantity > 0 && dropDown != '--Please, select a color --') {
         added = [selectedColour, selectedQuantity, id]
-        localStorage.setItem(productKey, added)
+        localStorage.setItem(productKey, JSON.stringify(added))
     }
     
 })
