@@ -24,6 +24,7 @@ function getLocalStorage(products) {
 
     Totals(products, productIndexes)
 
+    changeQuantity(productIndexes, products)
     
 }
 
@@ -92,6 +93,27 @@ function createArticle(products, productIndexes, coloursSelected, QuantitySelect
     cart.appendChild(newArticle)
 
     amount += products[productIndexes].price * QuantitySelected
+}
+
+function changeQuantity (indexes, products) {
+    let quantityButton = document.getElementsByClassName('itemQuantity')
+    for (var i = 0; i < indexes.length; i++) {
+        quantityButton[i].addEventListener('change', ($event) => {
+            let changeTo = $event.target.value
+            //console.log(changeTo)
+            let currentItem = products[(indexes[0])].name
+            let original = JSON.parse(localStorage.getItem(currentItem))
+            console.log(original[1])
+            original[1] = changeTo
+            console.log(original)
+            localStorage.setItem(currentItem, JSON.stringify(original))
+            location.reload()
+        });
+    }
+}
+
+function deleteFromCart () {
+
 }
 
 async function addProducts(link) {
