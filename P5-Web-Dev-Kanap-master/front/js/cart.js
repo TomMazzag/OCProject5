@@ -24,7 +24,7 @@ function getLocalStorage(products) {
 
     Totals(products, productIndexes)
 
-    changeQuantity(productIndexes, products)
+    changeQuantity(products)
     
 }
 
@@ -95,20 +95,22 @@ function createArticle(products, productIndexes, coloursSelected, QuantitySelect
     amount += products[productIndexes].price * QuantitySelected
 }
 
-function changeQuantity (indexes, products) {
-    let quantityButton = document.getElementsByClassName('itemQuantity')
-    for (var i = 0; i < indexes.length; i++) {
-        quantityButton[i].addEventListener('change', ($event) => {
-            let changeTo = $event.target.value
-            //console.log(changeTo)
-            let currentItem = products[(indexes[0])].name
-            let original = JSON.parse(localStorage.getItem(currentItem))
-            console.log(original[1])
-            original[1] = changeTo
-            console.log(original)
-            localStorage.setItem(currentItem, JSON.stringify(original))
-            location.reload()
-        });
+function changeQuantity (products) {
+    let cartItems = document.querySelectorAll('.cart__item')
+    for (let item of cartItems) {
+        item.addEventListener('change', (event) => {
+            for (product of products) {
+                if (product._id === item.dataset.id) {
+                    console.log(product)
+                    let changeTo = event.target.value
+                    let original = JSON.parse(localStorage.getItem(product.name))
+                    original[1] = changeTo
+                    console.log(original)
+                    localStorage.setItem(product.name, JSON.stringify(original))
+                    return location.reload();
+                } 
+            }
+        })
     }
 }
 
