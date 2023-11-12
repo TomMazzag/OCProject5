@@ -25,6 +25,8 @@ function getLocalStorage(products) {
     Totals(products, productIndexes)
 
     changeQuantity(products)
+
+    deleteFromCart(products)
     
 }
 
@@ -63,7 +65,7 @@ function createArticle(products, productIndexes, coloursSelected, QuantitySelect
     itemContentDesc.classList.add('cart__item__content__description');
     title.textContent = products[productIndexes].name;
     itemColour.textContent = coloursSelected;
-    price.textContent = '€' + products[productIndexes].price * QuantitySelected;
+    price.textContent = '€' + products[productIndexes].price;
     contentSettings.classList.add('cart__item__content__settings')
     contentSettingsQuantity.classList.add('cart__item__content__settings__quantity')
     quantity.textContent = 'Quantity : ' + QuantitySelected;
@@ -101,7 +103,6 @@ function changeQuantity (products) {
         item.addEventListener('change', (event) => {
             for (product of products) {
                 if (product._id === item.dataset.id) {
-                    console.log(product)
                     let changeTo = event.target.value
                     let original = JSON.parse(localStorage.getItem(product.name))
                     original[1] = changeTo
@@ -114,8 +115,19 @@ function changeQuantity (products) {
     }
 }
 
-function deleteFromCart () {
-
+function deleteFromCart (products) {
+    let cartItems = document.querySelectorAll('.cart__item__content__settings__delete')
+    for (let item of cartItems) {
+        item.addEventListener('click', (event) => {
+            selectedID = item.closest(".cart__item")
+            for (product of products) {
+                if (product._id === selectedID.dataset.id) {
+                    localStorage.removeItem(product.name)
+                    return location.reload();
+                } 
+            }
+        })
+    }
 }
 
 async function addProducts(link) {
