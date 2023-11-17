@@ -137,3 +137,67 @@ async function addProducts(link) {
 }
 
 addProducts('http://localhost:3000/api/products')
+
+function userDetails () {
+    let firstName = document.getElementById('firstName');
+    let lastsName = document.getElementById('lastName');
+    let address = document.getElementById('address');
+    let city = document.getElementById('city');
+    let email = document.getElementById('email');
+    let order = document.getElementById('order');
+
+    email.addEventListener('change', (event) => {
+        ValidateEmail(email)
+    })
+
+    const usersReciept = {
+        'firstName': firstName,
+        'surname': lastsName,
+        'address': address,
+        'city': city,
+        'email': email
+    }
+
+    const configOptions = {
+        method: 'POST',
+        headers: {
+        'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(usersReciept),
+    }
+
+    order.addEventListener('click', (event) => {
+        event.preventDefault()
+        if (ValidateEmail(email) == true) {
+            console.log('Its valid')
+            sendRecieptDetails('http://localhost:3000/api/products', configOptions)
+            //window.location = '/P5-Web-Dev-Kanap-master/front/html/confirmation.html'
+        }
+    })
+    
+}
+
+userDetails()
+
+function ValidateEmail(email) {
+    var format = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    if (email.value.match(format)) {
+        return (true)
+    }
+    alert("You have entered an invalid email address!")
+    return (false)
+}
+
+async function sendRecieptDetails(link, configOptions) {
+    await fetch(link, configOptions)
+        .then(data => {
+            if (!data.ok) {
+                throw Error(data.status);
+            }
+            return data.json();
+            }).then(usersReciept => {
+            console.log(usersReciept);
+            }).catch(e => {
+                console.log(e);
+                });
+}
