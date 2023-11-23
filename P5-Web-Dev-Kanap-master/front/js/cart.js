@@ -140,7 +140,7 @@ addProducts('http://localhost:3000/api/products')
 
 function userDetails () {
     let firstName = document.getElementById('firstName');
-    let lastsName = document.getElementById('lastName');
+    let lastName = document.getElementById('lastName');
     let address = document.getElementById('address');
     let city = document.getElementById('city');
     let email = document.getElementById('email');
@@ -150,27 +150,56 @@ function userDetails () {
         ValidateEmail(email)
     })
 
-    const usersReciept = {
-        'firstName': firstName,
-        'surname': lastsName,
-        'address': address,
-        'city': city,
-        'email': email
-    }
-
-    const configOptions = {
-        method: 'POST',
-        headers: {
-        'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(usersReciept),
-    }
 
     order.addEventListener('click', (event) => {
         event.preventDefault()
         if (ValidateEmail(email) == true) {
-            console.log('Its valid')
-            sendRecieptDetails('http://localhost:3000/api/products', configOptions)
+
+            chosenProductIds = []
+            let cartItems = document.querySelectorAll('.cart__item')
+            for (let item of cartItems) {
+                itemId = item.dataset.id
+                chosenProductIds.push(itemId)
+            }
+
+            const usersReceipt = {
+                'contact': {
+                    'firstName': firstName.value,
+                    'lastName': lastName.value,
+                    'address': address.value,
+                    'city': city.value,
+                    'email': email.value,   
+                },
+                'products' : chosenProductIds
+            }
+        
+            const configOptions = {
+                method: 'POST',
+                headers: {
+                'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(usersReceipt),
+            }
+
+            fetch('http://localhost:3000/api/products/order', configOptions)
+                .then(xyz => {
+                    if (!xyz.ok) {
+                        throw new Error(xyz.statusText);
+                    }
+                    return xyz.json();
+                })
+                .then(usersReceipt => {
+                    window.location = '/P5-Web-Dev-Kanap-master/front/html/confirmation.html?orderId=' + usersReceipt.orderId;
+                })
+                .catch(e => {
+                    console.log(e);
+                    if (e instanceof Response) {
+                        e.text().then(errorMessage => {
+                            console.error('Response Status:', e.status);
+                            console.error('Response Body:', errorMessage);
+                        });
+                    }
+                });
             //window.location = '/P5-Web-Dev-Kanap-master/front/html/confirmation.html'
         }
     })
@@ -188,8 +217,8 @@ function ValidateEmail(email) {
     return (false)
 }
 
-async function sendRecieptDetails(link, configOptions) {
-    await fetch(link, configOptions)
+function sendRecieptDetails(link, configOptions) {
+    fetch(link, configOptions)
         .then(data => {
             if (!data.ok) {
                 throw Error(data.status);
