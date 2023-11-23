@@ -216,17 +216,3 @@ function ValidateEmail(email) {
     alert("You have entered an invalid email address!")
     return (false)
 }
-
-function sendRecieptDetails(link, configOptions) {
-    fetch(link, configOptions)
-        .then(data => {
-            if (!data.ok) {
-                throw Error(data.status);
-            }
-            return data.json();
-            }).then(usersReciept => {
-            console.log(usersReciept);
-            }).catch(e => {
-                console.log(e);
-                });
-}
